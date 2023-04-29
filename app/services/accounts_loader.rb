@@ -1,6 +1,6 @@
 require 'csv'
 
-class BalanceLoader
+class AccountsLoader
   DATA_FOLDER = 'data'
 
   def initialize(company_name)

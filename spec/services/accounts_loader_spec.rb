@@ -1,11 +1,11 @@
 require 'spec_helper'
-# require_relative '../../app/services/balance_loader'
-require './app/services/balance_loader'
+# require_relative '../../app/services/accounts_loader'
+require './app/services/accounts_loader'
 
-RSpec.describe BalanceLoader, type: :service do
+RSpec.describe AccountsLoader, type: :service do
 
-  describe "BalanceLoader#call" do
-    subject { BalanceLoader.new('alphasales').call }
+  describe "AccountsLoader#call" do
+    subject { AccountsLoader.new('alphasales').call }
 
     it "loads all the account balance in the CSV data-file" do
       expect(subject.length).to eq(5)
