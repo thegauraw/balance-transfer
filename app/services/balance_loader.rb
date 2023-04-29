@@ -9,13 +9,22 @@ class BalanceLoader
   end
 
   def call
-    data_fullpath = File.join(DATA_FOLDER, "#{@company_name}_acc_balance.csv")
+    data_path = data_fullpath
 
-    CSV.foreach(data_fullpath, headers: true) do |row|
-      @accounts << row.to_s.strip
+    if data_path
+      CSV.foreach(data_path, headers: true) do |row|
+        @accounts << row.to_s.strip
+      end
     end
-    @accounts
 
+    @accounts
+  end
+
+  private
+
+  def data_fullpath
+    datapath = File.join(DATA_FOLDER, "#{@company_name}_acc_balance.csv")
+    datapath if File.exist?(datapath)
   end
 
 end
