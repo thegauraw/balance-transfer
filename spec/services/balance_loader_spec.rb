@@ -1,5 +1,5 @@
 require 'spec_helper'
-# require_relative '../app/services/balance_loader'
+# require_relative '../../app/services/balance_loader'
 require './app/services/balance_loader'
 
 RSpec.describe BalanceLoader, type: :service do
@@ -15,13 +15,13 @@ RSpec.describe BalanceLoader, type: :service do
       expected_output = %w[
         1111234522226789,5000.00
         1111234522221234,10000.00
-        2222123433331212,550.00 
+        2222123433331212,550.00
         1212343433335665,1200.00
         3212343433335755,50000.00
       ]
-      
+
       expect(subject).to eq(expected_output)
     end
   end
-  
+
 end
