@@ -70,6 +70,9 @@ RSpec.describe Company, type: :models do
       subject
       expect(processed_transfer_count).to be 4
     end
+
+    it_behaves_like "update csv account balance"
+
   end
 
 end
