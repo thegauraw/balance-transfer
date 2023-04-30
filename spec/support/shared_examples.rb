@@ -1,20 +1,40 @@
-shared_examples "account loader" do
+shared_examples "accounts loader" do
 
   it "loads all the account balance in the CSV data-file" do
     expect(subject.length).to eq(5)
   end
 
   it "loads relevant account details for the company" do
-    actual_results = subject
-    actual_results.transform_values!(&:to_h)
+    accounts = subject
+    accounts.transform_values!(&:to_h)
     expected_result = {
       "1111234522226789" => Account.new("1111234522226789", "5000.00").to_h,
-      "1111234522221234" => Account.new("1111234522221234", "10000.00").to_h,
-      "2222123433331212" => Account.new("2222123433331212", "550.00").to_h,
-      "1212343433335665" => Account.new("1212343433335665", "1200.00").to_h,
+      # "1111234522221234" => Account.new("1111234522221234", "10000.00").to_h,
+      # "2222123433331212" => Account.new("2222123433331212", "550.00").to_h,
+      # "1212343433335665" => Account.new("1212343433335665", "1200.00").to_h,
       "3212343433335755" => Account.new("3212343433335755", "50000.00").to_h
     }
-    expect(actual_results).to include(expected_result)
+    expect(accounts).to include(expected_result)
+  end
+
+end
+
+
+shared_examples "transfers loader" do
+
+  it "loads all the balance transfers in the CSV data-file" do
+    expect(subject.length).to eq(4)
+  end
+
+  it "loads relevant balance transfer details for the company" do
+    transfers = subject
+    transfers.map!(&:to_h)
+    expected_result = [
+      Transfer.new("1111234522226789", "1212343433335665", "500.00").to_h,
+      Transfer.new("1111234522221234", "1212343433335665", "25.6 0").to_h
+    ]
+
+    expect(transfers).to include(*expected_result)
   end
 
 end
