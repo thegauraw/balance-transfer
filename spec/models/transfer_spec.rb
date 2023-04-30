@@ -64,9 +64,9 @@ RSpec.describe Transfer, type: :models do
     subject { transfer.perform }
 
     context "when transfer is invalid" do
-      it "returns nil" do
+      it "returns 'insufficient-fund'" do
         allow(transfer).to receive(:is_valid?).and_return(false)
-        expect(subject).to be_nil
+        expect(subject).to eq("insufficient-fund")
       end
     end
 
