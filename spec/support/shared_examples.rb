@@ -30,8 +30,8 @@ shared_examples "transfers loader" do
     transfers = subject
     transfers.map!(&:to_h)
     expected_result = [
-      Transfer.new("1111234522226789", "1212343433335665", "500.00").to_h,
-      Transfer.new("1111234522221234", "1212343433335665", "25.6 0").to_h
+      {"from" => "1111234522226789", "to" => "1212343433335665", "amount" => 500.0},
+      {"from" => "1111234522221234", "to" => "1212343433335665", "amount" => 25.6}
     ]
 
     expect(transfers).to include(*expected_result)

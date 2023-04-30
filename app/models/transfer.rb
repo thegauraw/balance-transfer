@@ -7,11 +7,14 @@ class Transfer
     @amount = amount.to_f
   end
 
-  def self.create_from_csv(row)
-    new(row['from'], row["to"], row['amount'])
+  def self.create_from_csv(row, accounts)
+    from_account = accounts[row["from"]]
+    to_account = accounts[row["to"]]
+    amount = row["amount"]
+    new(from_account, to_account, amount)
   end
 
   def to_h
-    {"from" => @from_account, "to" => @to_account, "amount" => @amount}
+    {"from" => @from_account.id, "to" => @to_account.id, "amount" => @amount}
   end
 end
