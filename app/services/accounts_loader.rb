@@ -1,30 +1,23 @@
 require 'csv'
+require './app/models/account'
 
 class AccountsLoader
   DATA_FOLDER = 'data'
 
   def initialize(company)
     @company = company
-    @accounts = []
   end
 
   def call
-    data_path = data_fullpath
+    accounts = {}
 
-    if data_path
-      CSV.foreach(data_path, headers: true) do |row|
-        @accounts << row.to_s.strip
-      end
+    convert_to_lowercase = lambda { |header| header.downcase }
+    CSV.foreach(@company.account_data_path, headers: true, header_converters: convert_to_lowercase) do |row|
+      account = Account.create_from_csv(row)
+      accounts[account.id] = account
     end
 
-    @accounts
-  end
-
-  private
-
-  def data_fullpath
-    datapath = File.join(DATA_FOLDER, "#{@company.name}_acc_balance.csv")
-    datapath if File.exist?(datapath)
+    accounts
   end
 
 end

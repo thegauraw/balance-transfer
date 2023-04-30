@@ -3,10 +3,11 @@ require_relative '../services/accounts_loader'
 class Company
   DATA_FOLDER = "data"
 
-  attr_accessor :name
+  attr_accessor :name, :account_data_path
 
-  def initialize(name)
+  def initialize(name, account_data_path)
     @name = name
+    @account_data_path = account_data_path
     @accounts = nil
   end
 
@@ -15,7 +16,7 @@ class Company
   def self.find(name)
     data_path = data_fullpath(name)
     if data_path
-      new(name)
+      new(name, data_path)
     end
   end
 

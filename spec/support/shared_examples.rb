@@ -5,14 +5,16 @@ shared_examples "account loader" do
   end
 
   it "loads relevant account details for the company" do
-    expected_output = %w[
-      1111234522226789,5000.00
-      1111234522221234,10000.00
-      2222123433331212,550.00
-      1212343433335665,1200.00
-      3212343433335755,50000.00
-    ]
-    expect(subject).to eq(expected_output)
+    actual_results = subject
+    actual_results.transform_values!(&:to_h)
+    expected_result = {
+      "1111234522226789" => Account.new("1111234522226789", "5000.00").to_h,
+      "1111234522221234" => Account.new("1111234522221234", "10000.00").to_h,
+      "2222123433331212" => Account.new("2222123433331212", "550.00").to_h,
+      "1212343433335665" => Account.new("1212343433335665", "1200.00").to_h,
+      "3212343433335755" => Account.new("3212343433335755", "50000.00").to_h
+    }
+    expect(actual_results).to include(expected_result)
   end
 
 end
