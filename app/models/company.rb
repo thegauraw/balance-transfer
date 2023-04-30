@@ -1,5 +1,6 @@
 require_relative '../lib/data_utils'
 require_relative '../services/accounts_loader'
+require_relative '../services/accounts_updater'
 require_relative '../services/transfers_loader'
 
 class Company
@@ -31,6 +32,14 @@ class Company
 
   def transfers
     @transfers ||= TransfersLoader.new(self).call
+  end
+
+  def perform_transfers
+    transfers.each do |transfer|
+      transfer.perform
+    end
+    # update the record
+    AccountsUpdater.new(self).call
   end
 
 end

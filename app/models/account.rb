@@ -1,5 +1,5 @@
 class Account
-  attr_accessor :id #, :balance
+  attr_accessor :id, :balance
 
   def initialize(account, balance)
     @id = account

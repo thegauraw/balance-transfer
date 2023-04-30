@@ -50,4 +50,29 @@ RSpec.describe Company, type: :models do
 
   end
 
+  describe "Company#perform_transfers" do
+    let(:company_name) { "alphasales" }
+    let(:company) { Company.find(company_name) }
+    subject { company.perform_transfers }
+
+    it "performs on transfer objects" do
+      allow_any_instance_of(Transfer).to receive(:perform)
+      expect(company.transfers.first).to receive(:perform).at_least(:once).and_call_original
+      expect(company.transfers.last).to receive(:perform).at_least(:once).and_call_original
+      subject
+    end
+
+    it "performs transfer on each of the transfers" do
+      # not the best practice but confirms that perform was called for all the transfer records
+      # most of the time the above should be enough
+      processed_transfer_count = 0
+      allow_any_instance_of(Transfer).to receive(:perform) { processed_transfer_count += 1 }
+      subject
+      expect(processed_transfer_count).to be 4
+    end
+
+    it_behaves_like "update csv account balance"
+
+  end
+
 end
