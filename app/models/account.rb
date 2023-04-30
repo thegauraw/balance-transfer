@@ -11,6 +11,6 @@ class Account
   end
 
   def to_h
-    {"id" => @id, "balance" => @balance}
+    {"account" => @id, "balance" => @balance}
   end
 end
