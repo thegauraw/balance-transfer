@@ -40,4 +40,14 @@ RSpec.describe Company, type: :models do
 
   end
 
+  describe "Company#transfers" do
+
+    it_behaves_like "transfers loader" do
+      let(:company_name) { "alphasales" }
+      let(:company) { Company.find(company_name) }
+      subject { company.transfers }
+    end
+
+  end
+
 end
