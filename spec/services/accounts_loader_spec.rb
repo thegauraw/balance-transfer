@@ -1,27 +1,17 @@
 require 'spec_helper'
 # require_relative '../../app/services/accounts_loader'
+require './app/models/company'
 require './app/services/accounts_loader'
 
 RSpec.describe AccountsLoader, type: :service do
 
   describe "AccountsLoader#call" do
-    subject { AccountsLoader.new('alphasales').call }
+    let(:company) { Company.new('alphasales') }
 
-    it "loads all the account balance in the CSV data-file" do
-      expect(subject.length).to eq(5)
-    end
+    subject { AccountsLoader.new(company).call }
 
-    it "loads relevant account details for the company" do
-      expected_output = %w[
-        1111234522226789,5000.00
-        1111234522221234,10000.00
-        2222123433331212,550.00
-        1212343433335665,1200.00
-        3212343433335755,50000.00
-      ]
+    include_examples "account loader"
 
-      expect(subject).to eq(expected_output)
-    end
   end
 
 end

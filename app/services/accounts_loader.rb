@@ -3,8 +3,8 @@ require 'csv'
 class AccountsLoader
   DATA_FOLDER = 'data'
 
-  def initialize(company_name)
-    @company_name = company_name
+  def initialize(company)
+    @company = company
     @accounts = []
   end
 
@@ -23,7 +23,7 @@ class AccountsLoader
   private
 
   def data_fullpath
-    datapath = File.join(DATA_FOLDER, "#{@company_name}_acc_balance.csv")
+    datapath = File.join(DATA_FOLDER, "#{@company.name}_acc_balance.csv")
     datapath if File.exist?(datapath)
   end
 
