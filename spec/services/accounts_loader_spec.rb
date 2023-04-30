@@ -10,7 +10,7 @@ RSpec.describe AccountsLoader, type: :service do
 
     subject { AccountsLoader.new(company).call }
 
-    include_examples "account loader"
+    include_examples "accounts loader"
 
   end
 

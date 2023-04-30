@@ -32,10 +32,20 @@ RSpec.describe Company, type: :models do
 
   describe "Company#accounts" do
 
-    it_behaves_like "account loader" do
+    it_behaves_like "accounts loader" do
       let(:company_name) { "alphasales" }
       let(:company) { Company.find(company_name) }
       subject { company.accounts }
+    end
+
+  end
+
+  describe "Company#transfers" do
+
+    it_behaves_like "transfers loader" do
+      let(:company_name) { "alphasales" }
+      let(:company) { Company.find(company_name) }
+      subject { company.transfers }
     end
 
   end
