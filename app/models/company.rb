@@ -33,4 +33,11 @@ class Company
     @transfers ||= TransfersLoader.new(self).call
   end
 
+  def perform_transfers
+    transfers.each do |transfer|
+      transfer.perform
+    end
+    # update the record
+  end
+
 end

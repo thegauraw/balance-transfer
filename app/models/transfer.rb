@@ -17,4 +17,15 @@ class Transfer
   def to_h
     {"from" => @from_account.id, "to" => @to_account.id, "amount" => @amount}
   end
+
+  def is_valid?
+    @amount < @from_account.balance
+  end
+
+  def perform
+    if is_valid?
+      @from_account.balance -= @amount
+      @to_account.balance += @amount
+    end
+  end
 end

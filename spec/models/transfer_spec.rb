@@ -38,5 +38,49 @@ RSpec.describe Transfer, type: :models do
     end
   end
 
+  describe "Transfer#is_valid?" do
+    let(:transfer) { Transfer.create_from_csv(row, accounts) }
+    subject { transfer.is_valid? }
 
+    context "when amount to transfer is more than from_account's balance" do
+      before do
+        transfer.amount = 6000
+      end
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+
+    context "when amount to transfer is less than from_account's balance" do
+      it "returns true" do
+        expect(subject).to be true
+      end
+    end
+  end
+
+  describe "Transfer#perform" do
+    let(:transfer) { Transfer.create_from_csv(row, accounts) }
+    subject { transfer.perform }
+
+    context "when transfer is invalid" do
+      it "returns nil" do
+        allow(transfer).to receive(:is_valid?).and_return(false)
+        expect(subject).to be_nil
+      end
+    end
+
+    context "when transfer is valid" do
+      it "reduces the balance of from_account by transfer amount" do
+        allow(transfer).to receive(:is_valid?).and_return(true)
+        expect{ subject }.to change{ transfer.from_account.balance }.from(5000.0).to(4500.0)
+      end
+
+      it "increments the balance of to_account by transfer amount" do
+        allow(transfer).to receive(:is_valid?).and_return(true)
+        expect{ subject }.to change{ transfer.to_account.balance }.from(1200.0).to(1700.0)
+      end
+    end
+
+  end
 end
