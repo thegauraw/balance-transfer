@@ -4,10 +4,8 @@ require './app/models/company'
 RSpec.describe Company, type: :models do
 
   describe "Company.new" do
-    subject { Company.new('test') }
-
-    it "returns company object" do
-      expect(subject).to be_a Company
+    it "Company cannot be created by calling `Company.new` raises errror" do
+      expect{ Company.new }.to raise_error(NoMethodError)
     end
   end
 

@@ -6,7 +6,7 @@ require './app/services/accounts_loader'
 RSpec.describe AccountsLoader, type: :service do
 
   describe "AccountsLoader#call" do
-    let(:company) { Company.new('alphasales') }
+    let(:company) { Company.find('alphasales') }
 
     subject { AccountsLoader.new(company).call }
 

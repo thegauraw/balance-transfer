@@ -10,6 +10,8 @@ class Company
     @accounts = nil
   end
 
+  private_class_method :new
+
   def self.find(name)
     data_path = data_fullpath(name)
     if data_path
