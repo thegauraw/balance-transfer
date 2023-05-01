@@ -1,11 +1,25 @@
 require './exceptions/balance_insufficient_error'
+require './exceptions/account_invalid_error'
 
 class Account
-  attr_accessor :id, :balance
+  attr_accessor :id, :balance, :validity
 
   def initialize(account, balance)
     @id = account
     @balance = balance.to_f
+    validate
+  end
+
+  def validate
+    validate!
+  rescue AccountInvalidError => e
+    puts "Error! #{e.message} - account: #{@id} "
+    @validity = "invalid"
+  end
+
+  def validate!
+    raise AccountInvalidError unless /^\d{16}$/.match?(@id)
+    @validity = "valid"
   end
 
   def self.create_from_csv(row)
