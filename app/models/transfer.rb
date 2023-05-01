@@ -1,10 +1,14 @@
+require './exceptions/balance_insufficient_error'
+
 class Transfer
-  attr_accessor :from_account, :to_account, :amount
+  attr_accessor :from_account, :to_account, :amount, :status, :remarks
 
   def initialize(from_account, to_account, amount)
     @from_account = from_account
     @to_account = to_account
     @amount = amount.to_f
+    @status = nil
+    @remarks = nil
   end
 
   def self.create_from_csv(row, accounts)
@@ -18,16 +22,14 @@ class Transfer
     {"from" => @from_account.id, "to" => @to_account.id, "amount" => @amount}
   end
 
-  def is_valid?
-    @amount < @from_account.balance
-  end
-
   def perform
-    if is_valid?
-      @from_account.balance -= @amount
-      @to_account.balance += @amount
-    else
-      @status = "insufficient-fund"
-    end
+    @from_account.withdraw(amount)
+    @to_account.deposit(amount)
+    @status = "success"
+  rescue BalanceInsufficientError => e
+    puts "Error! #{e.message} - from: #{@from_account.to_h} amount: #{@amount} "
+    @status = "error"
+    @remarks = e.message
   end
 end
+
