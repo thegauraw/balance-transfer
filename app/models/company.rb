@@ -27,6 +27,14 @@ class Company
     end
   end
 
+  def account_status_data_path
+    account_data_path.gsub('.csv', '-updated.csv')
+  end
+
+  def transfer_status_data_path
+    transfer_data_path.gsub('.csv', '-updated.csv')
+  end
+
   def accounts
     @accounts ||= AccountsLoader.new(self).call
   end

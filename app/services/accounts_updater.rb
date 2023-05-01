@@ -9,8 +9,8 @@ class AccountsUpdater
 
   def call
     data_hashes = @company.accounts.values.map(&:to_data_hash)
-    new_filename = @company.account_data_path.gsub('.csv', '-updated.csv')
-    CsvUtils.write_hash_to_csv_file(data_hashes, new_filename)
+    account_status_update_filepath = @company.account_status_data_path
+    CsvUtils.write_hash_to_csv_file(data_hashes, account_status_update_filepath)
   end
 
 end
