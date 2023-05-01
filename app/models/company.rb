@@ -2,6 +2,7 @@ require_relative '../lib/data_utils'
 require_relative '../services/accounts_loader'
 require_relative '../services/accounts_updater'
 require_relative '../services/transfers_loader'
+require_relative '../services/transfers_updater'
 
 class Company
   extend DataUtils
@@ -40,6 +41,7 @@ class Company
     end
     # update the record
     AccountsUpdater.new(self).call
+    TransfersUpdater.new(self).call
   end
 
 end
