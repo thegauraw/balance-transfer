@@ -28,11 +28,11 @@ class Company
   end
 
   def account_status_data_path
-    account_data_path.gsub('.csv', '-updated.csv')
+    self.class.get_updated_account_path_for(name)
   end
 
   def transfer_status_data_path
-    transfer_data_path.gsub('.csv', '-updated.csv')
+    self.class.get_updated_transfer_path_for(name)
   end
 
   def accounts

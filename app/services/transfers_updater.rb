@@ -9,9 +9,7 @@ class TransfersUpdater
 
   def call
     data_hashes = @company.transfers.map(&:to_data_hash)
-    # data_hashes = @company.transfers.map(&:to_h)
-    transfer_status_update_filepath = @company.transfer_status_data_path
-    CsvUtils.write_hash_to_csv_file(data_hashes, transfer_status_update_filepath)
+    CsvUtils.write_hash_to_csv_file(data_hashes, @company.transfer_status_data_path)
   end
 
 end
