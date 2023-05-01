@@ -13,7 +13,11 @@ RSpec.describe Account, type: :models do
 
     it "creates appropriate account records" do
       expect(subject.id).to eq("1111234522226789")
-    #   expect(subject.balance).to eq(5000.00)
+      #   expect(subject.balance).to eq(5000.00)
+    end
+
+    it "validates when created" do
+      expect(subject.validity).to eq("valid")
     end
   end # `#create_from_csv`
 
@@ -28,5 +32,35 @@ RSpec.describe Account, type: :models do
     end
   end
 
+  describe "Account#withdraw" do
+    let(:account) { Account.create_from_csv(row) }
+
+    subject { account.withdraw(amount) }
+
+    context "when account-balance is higher than withdraw-amount" do
+      let(:amount) { 500 }
+
+      it "reduces the balance of from_account by transfer amount" do
+        expect{ subject }.to change{ account.balance }.from(5000.0).to(4500.0)
+      end
+    end
+
+    context "when account-balance is lower than withdraw-amount" do
+      let(:amount) { 6000 }
+      it "raises an exception" do
+        expect{subject}.to raise_error(BalanceInsufficientError)
+      end
+    end
+  end
+
+  describe "Account.deposit" do
+    let(:account) { Account.create_from_csv(row) }
+
+    subject { account.deposit(500) }
+
+    it "increments the balance of to_account by transfer amount" do
+      expect{ subject }.to change{ account.balance }.from(5000.0).to(5500.0)
+    end
+  end
 
 end
