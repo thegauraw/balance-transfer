@@ -44,6 +44,7 @@ guard :rspec, cmd: "bundle exec rspec" do
   watch(%r{^spec/.+_spec\.rb$}) # all files inside `spec/`
   watch(%r{^app/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^app/models/(.+)\.rb$})     { |m| "spec/models/#{m[1]}_spec.rb" }
+  watch(%r{^app/models/validators/(.+)\.rb$})     { |m| "spec/models/validators/#{m[1]}_spec.rb" }
   watch(%r{^app/services/(.+)\.rb$})     { |m| "spec/services/#{m[1]}_spec.rb" }
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }

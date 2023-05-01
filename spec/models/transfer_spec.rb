@@ -38,48 +38,52 @@ RSpec.describe Transfer, type: :models do
     end
   end
 
-  describe "Transfer#is_valid?" do
-    let(:transfer) { Transfer.create_from_csv(row, accounts) }
-    subject { transfer.is_valid? }
-
-    context "when amount to transfer is more than from_account's balance" do
-      before do
-        transfer.amount = 6000
-      end
-
-      it "returns false" do
-        expect(subject).to be false
-      end
-    end
-
-    context "when amount to transfer is less than from_account's balance" do
-      it "returns true" do
-        expect(subject).to be true
-      end
-    end
-  end
-
   describe "Transfer#perform" do
     let(:transfer) { Transfer.create_from_csv(row, accounts) }
     subject { transfer.perform }
 
-    context "when transfer is invalid" do
-      it "returns 'insufficient-fund'" do
-        allow(transfer).to receive(:is_valid?).and_return(false)
-        expect(subject).to eq("insufficient-fund")
+    context "when transfer is invalid i.e. from_account's balance is lower than transfer amount" do
+      before do
+        allow(transfer.from_account).to receive(:withdraw).and_raise(BalanceInsufficientError)
+      end
+
+      it "may attempt withdraw but does not deposit" do
+        expect(transfer.from_account).to receive(:withdraw)
+        expect(transfer.to_account).to_not receive(:deposit)
+        subject
+      end
+
+      it "NO change in from_account balance" do
+        expect{ subject }.to_not change{ transfer.from_account.balance }
+      end
+
+      it "NO change in to_account balance" do
+        expect{ subject }.to_not change{ transfer.to_account.balance }
+      end
+
+      it "sets status 'error'" do
+        subject
+        expect(transfer.status).to eq("error")
       end
     end
 
-    context "when transfer is valid" do
-      it "reduces the balance of from_account by transfer amount" do
-        allow(transfer).to receive(:is_valid?).and_return(true)
-        expect{ subject }.to change{ transfer.from_account.balance }.from(5000.0).to(4500.0)
+    context "when transfer is valid  i.e. from_account's balance is higher than transfer amount" do
+      before do
+        allow(transfer.from_account).to receive(:withdraw)
+        allow(transfer.to_account).to receive(:deposit)
       end
 
-      it "increments the balance of to_account by transfer amount" do
-        allow(transfer).to receive(:is_valid?).and_return(true)
-        expect{ subject }.to change{ transfer.to_account.balance }.from(1200.0).to(1700.0)
+      it "withdraws and deposits" do
+        expect(transfer.from_account).to receive(:withdraw).and_call_original
+        expect(transfer.to_account).to receive(:deposit).and_call_original
+        subject
       end
+
+      it "sets status 'success'" do
+        subject
+        expect(transfer.status).to eq("success")
+      end
+
     end
 
   end
