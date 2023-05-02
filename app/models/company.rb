@@ -1,18 +1,14 @@
 require_relative '../lib/data_utils'
-require_relative '../services/accounts_loader'
-require_relative '../services/accounts_updater'
-require_relative '../services/transfers_loader'
-require_relative '../services/transfers_updater'
+require_relative './collections/accounts'
+require_relative './collections/transfers'
 
 class Company
-  extend DataUtils
+  include DataUtils
 
-  attr_accessor :name, :account_data_path, :transfer_data_path
+  attr_accessor :name
 
-  def initialize(name, account_data_path, transfer_data_path)
+  def initialize(name)
     @name = name
-    @account_data_path = account_data_path
-    @transfer_data_path = transfer_data_path
     @accounts = nil
     @transfers = nil
   end
@@ -20,36 +16,38 @@ class Company
   private_class_method :new
 
   def self.find(name)
-    account_data_path = get_account_data_path_for(name)
-    transfer_data_path = get_transfer_data_path_for(name)
-    if account_data_path
-      new(name, account_data_path, transfer_data_path)
+    if is_account_data_available_for?(name)
+      new(name)
     end
-  end
-
-  def account_status_data_path
-    self.class.get_updated_account_path_for(name)
-  end
-
-  def transfer_status_data_path
-    self.class.get_updated_transfer_path_for(name)
   end
 
   def accounts
-    @accounts ||= AccountsLoader.new(self).call
+    @accounts ||= Accounts.load_for(self)
   end
 
   def transfers
-    @transfers ||= TransfersLoader.new(self).call
+    @transfers ||= Transfers.load_for(self)
+  end
+
+  def accounts_data
+    accounts.data
+  end
+
+  def transfers_data
+    transfers.data
   end
 
   def perform_transfers
-    transfers.each do |transfer|
-      transfer.perform
-    end
-    # update the record
-    AccountsUpdater.new(self).call
-    TransfersUpdater.new(self).call
+    transfers.perform_all
+
+    @accounts.write_data#_to(data_path)
+    @transfers.write_data#_to(data_path)
+    puts "Daily transfers for the chosen company: #{@name} is now complete."
+    puts "You can see the new-balance in: #{self.account_status_data_path}"
+    puts "For transfer status check: #{self.transfer_status_data_path}"
+  rescue StandardError => e
+    puts "Sorry, an error occured while attempting to perform the daily transfer for #{@name}"
+    puts "Error Details for admin: #{e.full_message}"
   end
 
 end

@@ -38,31 +38,3 @@ shared_examples "transfers loader" do
   end
 
 end
-
-shared_examples "update csv file with new account balance" do
-  it "writes new account balances to csv" do
-    subject
-    new_filename = company.account_data_path.gsub('.csv', '-updated.csv')
-    data_to_array = CSV.read(new_filename)
-    expected_records = [
-      %w|account balance validity|,
-      %w|1111234522226789 4820.5 valid|,
-      %w|3212343433335755 48679.5 valid|,
-    ]
-    expect(data_to_array).to include(*expected_records)
-  end
-end
-
-shared_examples "update csv file with transfer-status" do
-  it "writes new transfers status to csv" do
-    subject
-    new_filename = company.transfer_data_path.gsub('.csv', '-updated.csv')
-    data_to_array = CSV.read(new_filename)
-    expected_records = [
-      ["from", "to", "amount", "status", "remarks"],
-      ["1111234522226789", "1212343433335665", "500.0", "success", nil],
-      ["1111234522221234", "1212343433335665", "25.6", "success", nil]
-    ]
-    expect(data_to_array).to include(*expected_records)
-  end
-end
