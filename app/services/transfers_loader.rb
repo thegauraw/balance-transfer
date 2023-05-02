@@ -13,7 +13,7 @@ class TransfersLoader
 
     convert_to_lowercase = lambda { |header| header.downcase }
     CSV.foreach(@company.transfer_data_path, headers: true, header_converters: convert_to_lowercase) do |row|
-      transfer = Transfer.create_from_csv(row, @company.accounts)
+      transfer = Transfer.create_from_csv(row, @company.accounts_data)
       transfers << transfer
     end
 

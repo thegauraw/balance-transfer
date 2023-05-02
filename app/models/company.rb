@@ -1,8 +1,6 @@
 require_relative '../lib/data_utils'
-require_relative '../services/accounts_loader'
-require_relative '../services/accounts_updater'
-require_relative '../services/transfers_loader'
-require_relative '../services/transfers_updater'
+require_relative './collections/accounts'
+require_relative './collections/transfers'
 
 class Company
   include DataUtils
@@ -23,29 +21,27 @@ class Company
     end
   end
 
-  def account_status_data_path
-    self.class.get_updated_account_path_for(name)
-  end
-
-  def transfer_status_data_path
-    self.class.get_updated_transfer_path_for(name)
-  end
-
   def accounts
-    @accounts ||= AccountsLoader.new(self).call
+    @accounts ||= Accounts.load_for(self)
   end
 
   def transfers
-    @transfers ||= TransfersLoader.new(self).call
+    @transfers ||= Transfers.load_for(self)
+  end
+
+  def accounts_data
+    accounts.data
+  end
+
+  def transfers_data
+    transfers.data
   end
 
   def perform_transfers
-    transfers.each do |transfer|
-      transfer.perform
-    end
-    # update the record
-    AccountsUpdater.new(self).call
-    TransfersUpdater.new(self).call
+    transfers.perform_all
+
+    @accounts.write_data#_to(data_path)
+    @transfers.write_data#_to(data_path)
   end
 
 end
