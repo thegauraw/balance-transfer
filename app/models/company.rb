@@ -5,14 +5,12 @@ require_relative '../services/transfers_loader'
 require_relative '../services/transfers_updater'
 
 class Company
-  extend DataUtils
+  include DataUtils
 
-  attr_accessor :name, :account_data_path, :transfer_data_path
+  attr_accessor :name
 
-  def initialize(name, account_data_path, transfer_data_path)
+  def initialize(name)
     @name = name
-    @account_data_path = account_data_path
-    @transfer_data_path = transfer_data_path
     @accounts = nil
     @transfers = nil
   end
@@ -20,10 +18,8 @@ class Company
   private_class_method :new
 
   def self.find(name)
-    account_data_path = get_account_data_path_for(name)
-    transfer_data_path = get_transfer_data_path_for(name)
-    if account_data_path
-      new(name, account_data_path, transfer_data_path)
+    if is_account_data_available_for?(name)
+      new(name)
     end
   end
 
