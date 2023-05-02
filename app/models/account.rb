@@ -19,6 +19,10 @@ class Account
     {"account" => @id, "balance" => @balance}
   end
 
+  def to_data_hash
+    {"account" => @id, "balance" => @balance, "validity" => @validity}
+  end
+
   def withdraw(amount)
     raise BalanceInsufficientError unless can_withdraw?(amount)
     @balance -= amount

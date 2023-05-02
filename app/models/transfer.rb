@@ -22,6 +22,10 @@ class Transfer
     {"from" => @from_account.id, "to" => @to_account.id, "amount" => @amount}
   end
 
+  def to_data_hash
+    {"from" => @from_account.id, "to" => @to_account.id, "amount" => @amount, "status" => @status, "remarks" => @remarks}
+  end
+
   def perform
     @from_account.withdraw(amount)
     @to_account.deposit(amount)

@@ -2,6 +2,7 @@ require_relative '../lib/data_utils'
 require_relative '../services/accounts_loader'
 require_relative '../services/accounts_updater'
 require_relative '../services/transfers_loader'
+require_relative '../services/transfers_updater'
 
 class Company
   extend DataUtils
@@ -26,6 +27,14 @@ class Company
     end
   end
 
+  def account_status_data_path
+    self.class.get_updated_account_path_for(name)
+  end
+
+  def transfer_status_data_path
+    self.class.get_updated_transfer_path_for(name)
+  end
+
   def accounts
     @accounts ||= AccountsLoader.new(self).call
   end
@@ -40,6 +49,7 @@ class Company
     end
     # update the record
     AccountsUpdater.new(self).call
+    TransfersUpdater.new(self).call
   end
 
 end
