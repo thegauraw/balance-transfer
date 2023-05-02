@@ -42,6 +42,12 @@ class Company
 
     @accounts.write_data#_to(data_path)
     @transfers.write_data#_to(data_path)
+    puts "Daily transfers for the chosen company: #{@name} is now complete."
+    puts "You can see the new-balance in: #{self.account_status_data_path}"
+    puts "For transfer status check: #{self.transfer_status_data_path}"
+  rescue StandardError => e
+    puts "Sorry, an error occured while attempting to perform the daily transfer for #{@name}"
+    puts "Error Details for admin: #{e.full_message}"
   end
 
 end
