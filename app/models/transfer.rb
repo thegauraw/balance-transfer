@@ -15,6 +15,14 @@ class Transfer
     from_account = accounts[row["from"]]
     to_account = accounts[row["to"]]
     amount = row["amount"]
+
+    # TODO: Check for account validity before tranfer
+    # def Account#is_valid?
+    #   @validity == "valid"
+    # end
+    # if from_account.is_valid? && to_account.is_valid?
+    # create transfer with @status="error" @remarks="InvalidAccount" if any account is invalid
+
     new(from_account, to_account, amount)
   end
 
@@ -27,6 +35,8 @@ class Transfer
   end
 
   def perform
+    # TODO: Check for account validity before tranfer
+    # only perform on transfers without @status == "error"
     @from_account.withdraw(amount)
     @to_account.deposit(amount)
     @status = "success"
